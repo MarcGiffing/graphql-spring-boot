@@ -44,12 +44,20 @@ subprojects {
     apply plugin: 'propdeps-eclipse'
     apply plugin: "com.jfrog.bintray"
 
-    version = System.env.TRAVIS_TAG ? PROJECT_VERSION : PROJECT_VERSION + '-' + versionDate
+    version = System.env.TRAVIS_TAG ? PROJECT_VERSION : PROJECT_VERSION + '-SNAPSHOT'
     group = PROJECT_GROUP
 
     repositories {
+        mavenLocal()
         jcenter()
-        maven { url "http://dl.bintray.com/oembedler/maven" }
+    }
+
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                repository(url: "file://localhost/home/martin/.m2/repository")
+            }
+        }
     }
 
     idea {
