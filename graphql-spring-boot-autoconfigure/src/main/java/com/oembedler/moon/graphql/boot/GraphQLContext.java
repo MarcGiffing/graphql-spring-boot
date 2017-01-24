@@ -13,14 +13,14 @@ public class GraphQLContext extends HashMap<String, Object> {
     public static final String KEY_FILE_UPLOAD = "file";
     public static final String KEY_HTTP_REQUEST = "http-request";
 
-    public HttpServletRequest setHttpRequest(final HttpServletRequest request) {
+    public GraphQLContext setHttpRequest(final HttpServletRequest request) {
         this.put(KEY_HTTP_REQUEST, request);
-        return getHttpRequest();
+        return this;
     }
 
-    public MultipartFile setUploadedFile(final MultipartFile file) {
+    public GraphQLContext setUploadedFile(final MultipartFile file) {
         this.put(KEY_FILE_UPLOAD, file);
-        return getUploadedFile();
+        return this;
     }
 
     public MultipartFile getUploadedFile() {
