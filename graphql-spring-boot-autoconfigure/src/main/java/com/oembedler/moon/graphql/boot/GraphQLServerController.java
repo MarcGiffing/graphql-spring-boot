@@ -27,7 +27,9 @@ import graphql.ExecutionResultImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -67,7 +69,7 @@ public class GraphQLServerController {
 
     // ---
 
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     public ResponseEntity<Map<String, Object>> getJson(@RequestParam(DEFAULT_QUERY_KEY) String query,
                                                        @RequestParam(value = DEFAULT_VARIABLES_KEY, required = false) String variables,
                                                        @RequestParam(value = DEFAULT_OPERATION_NAME_KEY, required = false) String operationName,
@@ -81,7 +83,7 @@ public class GraphQLServerController {
         return ResponseEntity.ok(result);
     }
 
-    @RequestMapping(method = RequestMethod.POST, consumes = "application/graphql")
+    @PostMapping(consumes = "application/graphql")
     public ResponseEntity<Map<String, Object>> postGraphQL(@RequestBody String query,
                                                            @RequestParam(value = DEFAULT_OPERATION_NAME_KEY, required = false) String operationName,
                                                            @RequestHeader(value = HEADER_SCHEMA_NAME, required = false) String graphQLSchemaName,
@@ -94,7 +96,7 @@ public class GraphQLServerController {
         return ResponseEntity.ok(result);
     }
 
-    @RequestMapping(method = RequestMethod.POST, consumes = "application/json")
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Object>> postJson(@RequestBody Map<String, Object> body,
                                                         @RequestHeader(value = HEADER_SCHEMA_NAME, required = false) String graphQLSchemaName,
                                                         HttpServletRequest httpServletRequest) {
@@ -115,7 +117,7 @@ public class GraphQLServerController {
         return ResponseEntity.ok(result);
     }
 
-    @RequestMapping(method = RequestMethod.POST, consumes = "multipart/form-data")
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Map<String, Object>> uploadFile(@RequestParam(DEFAULT_FILENAME_UPLOAD_KEY) MultipartFile file,
                                                           @RequestParam(DEFAULT_QUERY_KEY) String query,
                                                           @RequestParam(value = DEFAULT_VARIABLES_KEY, required = false) String variables,
@@ -131,7 +133,7 @@ public class GraphQLServerController {
         return ResponseEntity.ok(result);
     }
 
-    @RequestMapping(method = RequestMethod.POST, consumes = "application/x-www-form-urlencoded")
+    @PostMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public ResponseEntity<Map<String, Object>> uploadSmallFile(@RequestParam(DEFAULT_QUERY_KEY) String query,
                                                                @RequestParam(value = DEFAULT_VARIABLES_KEY, required = false) String variables,
                                                                @RequestParam(value = DEFAULT_OPERATION_NAME_KEY, required = false) String operationName,
@@ -162,7 +164,7 @@ public class GraphQLServerController {
         final GraphQLSchemaHolder graphQLSchemaHolder = getGraphQLSchemaContainer(graphQLSchemaName);
         final ExecutionResult executionResult = evaluate(query, operationName, graphQLContext, variables, graphQLSchemaHolder);
 
-        if (executionResult.getErrors().size() > 0) {
+        if (!CollectionUtils.isEmpty(executionResult.getErrors())) {
             result.put(DEFAULT_ERRORS_KEY, executionResult.getErrors());
             LOGGER.error("Errors: {}", executionResult.getErrors());
         }
