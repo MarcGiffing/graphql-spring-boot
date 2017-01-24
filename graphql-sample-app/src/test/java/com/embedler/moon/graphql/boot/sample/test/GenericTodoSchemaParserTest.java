@@ -19,38 +19,38 @@
 
 package com.embedler.moon.graphql.boot.sample.test;
 
-import com.embedler.moon.graphql.boot.sample.ApplicationBootConfiguration;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.oembedler.moon.graphql.boot.GraphQLServerRequest;
-import com.oembedler.moon.graphql.boot.GraphQLServerResult;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.boot.test.TestRestTemplate;
-import org.springframework.boot.test.WebIntegrationTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.embedler.moon.graphql.boot.sample.ApplicationBootConfiguration;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.oembedler.moon.graphql.boot.GraphQLServerRequest;
+import com.oembedler.moon.graphql.boot.GraphQLServerResult;
+
 /**
  * @author <a href="mailto:java.lang.RuntimeException@gmail.com">oEmbedler Inc.</a>
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(ApplicationBootConfiguration.class)
-@WebIntegrationTest("server.port=0")
+@SpringBootTest(classes = ApplicationBootConfiguration.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class GenericTodoSchemaParserTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GenericTodoSchemaParserTest.class);
@@ -58,7 +58,7 @@ public class GenericTodoSchemaParserTest {
     @Value("${local.server.port}")
     private int port;
 
-    private RestTemplate restTemplate = new TestRestTemplate();
+    private TestRestTemplate restTemplate = new TestRestTemplate();
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
