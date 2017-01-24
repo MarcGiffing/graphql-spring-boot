@@ -16,7 +16,7 @@ import java.util.List;
 public class SimpleListConnection {
 
     private static final String DUMMY_CURSOR_PREFIX = "simple-cursor";
-    private List<?> data = new ArrayList<Object>();
+    private List<?> data = new ArrayList<>();
 
     public SimpleListConnection(List<?> data) {
         this.data = data;
@@ -46,9 +46,9 @@ public class SimpleListConnection {
 
         List<EdgeObjectType> edges = buildEdges();
 
-        int afterOffset = getOffsetFromCursor(environment.<String>getArgument("after"), -1);
+        int afterOffset = getOffsetFromCursor(environment.getArgument("after"), -1);
         int begin = Math.max(afterOffset, -1) + 1;
-        int beforeOffset = getOffsetFromCursor(environment.<String>getArgument("before"), edges.size());
+        int beforeOffset = getOffsetFromCursor(environment.getArgument("before"), edges.size());
         int end = Math.min(beforeOffset, edges.size());
 
         edges = edges.subList(begin, end);
